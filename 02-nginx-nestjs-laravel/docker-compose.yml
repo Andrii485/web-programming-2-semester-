@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+  nginx:
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "8000:80"
+    volumes:
+      - ./frontend/dist:/srv/www/static
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - node-express
+      - php-laravel
+      - python-django
+
+  node-express:
+    image: node:18-alpine
+    working_dir: /app
+    restart: always
+    ports:
+      - "8001:3000"
+    volumes:
+      - ./node-express:/app
+    command: >
+      sh -c "if [ ! -f package.json ]; then 
+               echo 'Error: package.json not found! Please run npm init in node-express folder.';
+               sleep 60;
+             else 
+               npm install && npm start; 
+             fi"
+
+  python-django:
+    image: python:3.10-slim
+    working_dir: /app
+    restart: always
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./python-django:/app
+    command: >
+      sh -c "pip install django && 
+             python manage.py runserver 0.0.0.0:8000"
+
+  php-laravel:
+    image: webdevops/php-nginx:8.4
+    restart: always
+    ports:
+      - "8003:80"
+    volumes:
+      - ./php-laravel:/app
+    environment:
+      - WEB_DOCUMENT_ROOT=/app/public
+      - PHP_DEBUG_HANDLER=display
