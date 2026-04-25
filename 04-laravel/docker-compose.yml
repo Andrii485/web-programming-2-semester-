@@ -1,0 +1,62 @@
+version: "3.8"
+services:
+  # ПРОКСІ-СЕРВЕР (Nginx) - за завданням для обробки http://localhost/php
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend:/srv/www/static # Монтуємо вашу папку frontend
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+      - nodejs
+
+  # ТЕСТОВИЙ ФРОНТЕНД (Node.js)
+  nodejs:
+    image: node:alpine
+    working_dir: /home/app
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/home/app # папка з вашим фронтенд-проєктом
+    command: ["npm", "run", "dev"] # або start, залежно від вашого фронту
+
+  # LARAVEL APP (PHP)
+  php:
+    image: webdevops/php-apache-dev:8.4
+    container_name: laravel-app
+    ports:
+      - "8081:80" # Специфікація вимагає http://localhost:8081/api
+    volumes:
+      - 'B:\web-programming\backend-examples\04-laravel\laravel-app:/app' # Монтуємо поточну папку (де лежить Laravel) в контейнер
+    environment:
+      WEB_DOCUMENT_ROOT: /app/public
+      PHP_DEBUGGER: "none"
+    depends_on:
+      - mysql
+
+  # БАЗА ДАНИХ (MySQL)
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-laravel
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "laraval-app"
+      MYSQL_USER: "andrey"
+      MYSQL_PASSWORD: "Andrey5678%"
+    ports:
+      - "3309:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql
+volumes:
+  db_data:
