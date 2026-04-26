@@ -1,0 +1,69 @@
+openapi: 3.0.0
+info:
+  title: Keycloak Authorization Flows
+  version: 1.0.0
+  description: OAuth2 авторизація через Keycloak (Realm Andrey)
+
+servers:
+  - url: http://localhost:8080/realms/Andrey
+
+components:
+  securitySchemes:
+    OAuth2Auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: http://localhost:8080/realms/Andrey/protocol/openid-connect/auth
+          tokenUrl: http://localhost:8080/realms/Andrey/protocol/openid-connect/token
+          scopes:
+            openid: OpenID
+        implicit:
+          authorizationUrl: http://localhost:8080/realms/Andrey/protocol/openid-connect/auth
+          scopes:
+            openid: OpenID
+        password:
+          tokenUrl: http://localhost:8080/realms/Andrey/protocol/openid-connect/token
+          scopes:
+            openid: OpenID
+        clientCredentials:
+          tokenUrl: http://localhost:8080/realms/Andrey/protocol/openid-connect/token
+          scopes:
+            openid: OpenID
+
+paths:
+  /protocol/openid-connect/token:
+    post:
+      summary: Отримати токен
+      security:
+        - OAuth2Auth: [openid]
+      responses:
+        '200':
+          description: Токен успішно отримано
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                  expires_in:
+                    type: integer
+                  refresh_token:
+                    type: string
+                  refresh_expires_in:
+                    type: integer
+        '401':
+          description: Невірні дані
+
+  /protocol/openid-connect/userinfo:
+    get:
+      summary: Інформація про користувача
+      security:
+        - OAuth2Auth: [openid]
+      responses:
+        '200':
+          description: Дані користувача
+        '401':
+          description: Не авторизовано
