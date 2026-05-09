@@ -1,0 +1,56 @@
+{
+    "name": "robsontenorio/laravel-keycloak-guard",
+    "description": "🔑 Simple Keycloak Guard for Laravel",
+    "keywords": [
+        "laravel",
+        "keycloak"
+    ],
+    "homepage": "https://github.com/robsontenorio/laravel-keycloak-guard",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Robson Tenório"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "firebase/php-jwt": "^7.0",
+        "php": "^8.2",
+        "ext-openssl": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "KeycloakGuard\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "KeycloakGuard\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "pest",
+        "test:coverage": "php -d pcov.enabled=1 ./vendor/bin/pest --coverage --coverage-clover=.coverage/clover.xml --coverage-html=.coverage",
+        "post-autoload-dump": [
+            "@php ./vendor/bin/testbench package:discover --ansi"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "KeycloakGuard\\KeycloakGuardServiceProvider"
+            ]
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^10|^11.0",
+        "pestphp/pest": "^4.4",
+        "laravel/pint": "^1.29"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}

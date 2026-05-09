@@ -1,0 +1,188 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Products API",
+        "description": "API для управління продуктами",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Local server"
+        }
+    ],
+    "paths": {
+        "/api/products": {
+            "get": {
+                "summary": "Список всіх продуктів",
+                "operationId": "1bfaa78d1c2c3848ab8165c5dadcad3e",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - немає ролі ProductsApiViewer"
+                    }
+                },
+                "security": [
+                    {
+                        "keycloak_client_credentials": []
+                    },
+                    {
+                        "keycloak_auth_code": []
+                    }
+                ]
+            },
+            "post": {
+                "summary": "Створити продукт",
+                "operationId": "e8185e307706e2cd84bbcf5171e2f09d",
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - немає ролі ProductsApiWriter"
+                    }
+                },
+                "security": [
+                    {
+                        "keycloak_client_credentials": []
+                    },
+                    {
+                        "keycloak_auth_code": []
+                    }
+                ]
+            }
+        },
+        "/api/products/{id}": {
+            "get": {
+                "summary": "Отримати один продукт",
+                "operationId": "7ab21ddb713501f3d4c2914892c02a21",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - немає ролі ProductsApiViewer"
+                    }
+                },
+                "security": [
+                    {
+                        "keycloak_client_credentials": []
+                    },
+                    {
+                        "keycloak_auth_code": []
+                    }
+                ]
+            },
+            "put": {
+                "summary": "Оновити продукт",
+                "operationId": "6a7e11900844cd85cff66e662b82bd4c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - немає ролі ProductsApiWriter"
+                    }
+                },
+                "security": [
+                    {
+                        "keycloak_client_credentials": []
+                    },
+                    {
+                        "keycloak_auth_code": []
+                    }
+                ]
+            },
+            "delete": {
+                "summary": "Видалити продукт",
+                "operationId": "e80a6ca46716acee6b47ea1ac91663c0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - немає ролі ProductsApiWriter"
+                    }
+                },
+                "security": [
+                    {
+                        "keycloak_client_credentials": []
+                    },
+                    {
+                        "keycloak_auth_code": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "keycloak_client_credentials": {
+                "type": "oauth2",
+                "flows": {
+                    "clientCredentials": {
+                        "tokenUrl": "http://localhost:8080/realms/master/protocol/openid-connect/token",
+                        "scopes": {}
+                    }
+                }
+            },
+            "keycloak_auth_code": {
+                "type": "oauth2",
+                "flows": {
+                    "authorizationCode": {
+                        "authorizationUrl": "http://localhost:8080/realms/master/protocol/openid-connect/auth",
+                        "tokenUrl": "http://localhost:8080/realms/master/protocol/openid-connect/token",
+                        "scopes": {}
+                    }
+                }
+            }
+        }
+    }
+}
